@@ -6,27 +6,25 @@ public class Tree {
 
   private int height;
   private int foodReserves;
-  public int[] positionInForest;
-  public String species;
-  private HashMap<String,Integer> photosynthesisRate = new HashMap<String, Integer>();
+  private int[] positionInForest;
+  private String species;
+  private Integer photosynthesisRate;
+  private Boolean hasReportedMaturity;
 
-  public Tree(String species, int posX, int posY) {
+  public Tree(String species, int[] pos) {
     this.species = species;
     this.positionInForest = new int[2];
-    this.positionInForest[0] = posX;
-    this.positionInForest[1] = posY;
+    this.positionInForest[0] = pos[0];
+    this.positionInForest[1] = pos[1];
+    this.photosynthesisRate = 1;
+    this.hasReportedMaturity = false;
     System.out.printf("I am a born %s tree\n", species);
 
-    this.photosynthesisRate.put("Pine",20);
-    this.photosynthesisRate.put("Oak",1);
-    this.photosynthesisRate.put("Cedar",1);
-    this.photosynthesisRate.put("Juniper",1);
-    this.photosynthesisRate.put("Fir",1);
-    this.photosynthesisRate.put("Cypress",1);
-    this.photosynthesisRate.put("Redwood",1);
-    this.photosynthesisRate.put("Sequoia",1);
-    this.photosynthesisRate.put("Yew",1);
-    this.photosynthesisRate.put("Hemlock",10);
+    if (this.species == "Pine") {
+      this.photosynthesisRate = 20;
+    } else if (this.species == "Hemlock") {
+      this. photosynthesisRate = 10;
+    } 
   }
 
   public void grow() {
@@ -36,19 +34,28 @@ public class Tree {
       }
   }
 
-  public void photosynthesise(String specie) {
+  public void photosynthesise() {
       // this.foodReserves++;
-      Integer phSpeed = photosynthesisRate.get(specie);
-      this.foodReserves += phSpeed;
+      this.foodReserves += this.photosynthesisRate;
   }
 
   public Boolean isMature() {
     if (height == 20) {
-      System.out.printf("I am a healthy %s tree\n", species);
+      reportMaturity();
       return true;
     }
     return false;
   }
 
-  // Getters and Setters ommited (explained in lesson 5 Encapsulation)
+  public int[] isLocated() {
+    return this.positionInForest;
+  }
+
+  private void reportMaturity(){
+    if (this.hasReportedMaturity == false ) {
+      this.hasReportedMaturity = true;
+      System.out.printf("I am a healthy %s tree\n", species);
+    }
+  }
+
 }

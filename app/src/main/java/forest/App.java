@@ -4,83 +4,112 @@
 package forest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.awt.geom.Point2D;
 
 public class App {
    private static String[] species = { "Pine", "Oak", "Cedar", "Juniper", "Fir", "Cypress", "Redwood", "Sequoia", "Yew", "Hemlock"};
    private static ArrayList<Tree> forest = new ArrayList<Tree>();
+   private static int count = 0;
+   private static Random rand = new Random();
+
+
     public static void main(String[] args) {
-        for(int i = 0; i < 2; i++) {
-            for(String specie : species) {
-                Integer locationOfX = positionOfTree(); 
-                Integer locationOfY = positionOfTree();
 
-                while (checkIfPositionIsOccupied(locationOfX, locationOfY) == true){
-                    locationOfX = positionOfTree();
-                    locationOfY = positionOfTree();
-                    System.out.println("Finding new home for the tree");          
-                }
 
-                System.out.printf("location of x and y is %d %d \n", locationOfX, locationOfY);
-                forest.add(new Tree(specie, locationOfX, locationOfY));                
-                // find my nearest neighbour, update attribute in Tree Class with X,Y location
-                if (forest.size() > 1){
-                    Double nearesteighbour = nearestTreeCalculation(locationOfX, locationOfY);
-                    System.out.printf("This is my closest neighbour %f \n", nearesteighbour);
-                }
+        Timer timer = new Timer();
+        TimerTask tt = new TimerTask() {  
+            @Override  
+            public void run() {  
+                System.out.println(count);
+                letNatureHappen();
+                count++;
+                if (count >= 400) {
+                    timer.cancel();
+                    timer.purge();
+                    return;
+                }                
+            };  
+        }; 
 
-                growAllTrees();
-                // my nearest neighbour determines my photosynthesis boolean/rate
-            }
-        }       
+      timer.scheduleAtFixedRate(tt,500,3);  
+        // for(int i = 0; i < 2; i++) {
+        //     for(String specie : species) {
+        //         Integer locationOfX = positionOfTree(); 
+        //         Integer locationOfY = positionOfTree();
+
+        //         while (checkIfPositionIsOccupied(locationOfX, locationOfY) == true){
+        //             locationOfX = positionOfTree();
+        //             locationOfY = positionOfTree();
+        //             System.out.println("Finding new home for the tree");          
+        //         }
+
+        //         System.out.printf("location of x and y is %d %d \n", locationOfX, locationOfY);
+        //         // find my nearest neighbour, update attribute in Tree Class with X,Y location
+        //         if (forest.size() > 1){
+        //             Double nearesteighbour = nearestTreeCalculation(locationOfX, locationOfY);
+        //             System.out.printf("This is my closest neighbour %f \n", nearesteighbour);
+        //         }
+
+        //         growAllTrees();
+        //         // my nearest neighbour determines my photosynthesis boolean/rate
+        //     }
+        // }       
     }
   
-    private static Integer positionOfTree(){
-        Random rand = new Random();
-        int randomNum = rand.nextInt((10 - 1) + 1) + 1;
-        return randomNum;
+    private static void somethingIsHappening() {
+        System.out.println("This is something");
+    }   
+    
+    private static int[] randomPosition(){
+        return new int[] {rand.nextInt((100 - 1) + 1) + 1, rand.nextInt((100 - 1) + 1) + 1};
     }
 
-    private static Boolean checkIfPositionIsOccupied(Integer locationOfX, Integer locationOfY){
+    private static String randomSpecies(){
+        return species[rand.nextInt(species.length)];
+    }
+
+    private static Boolean checkIfPositionIsOccupied(int[] locations){
         for (Tree tree : forest){
-            if (tree.positionInForest[0] == locationOfX && tree.positionInForest[1] == locationOfY){
+            if (tree.isLocated() == locations){
                 return true;
             } 
         }
         return false;
     }
 
-    private static Double nearestTreeCalculation(Integer locationOfX, Integer locationOfY){
-        ArrayList<Double> treeLocations = new ArrayList<Double>();
-        for (Tree tree: forest){
-            Integer x1 = tree.positionInForest[0];
-            Integer y1 = tree.positionInForest[1];
-            Integer x2 = locationOfX;
-            Integer y2 = locationOfY;
-            treeLocations.add(Point2D.distance(x1, y1, x2, y2));
+    // private static Double nearestTreeCalculation(Integer locationOfX, Integer locationOfY){
+    //     ArrayList<Double> treeLocations = new ArrayList<Double>();
+    //     for (Tree tree: forest){
+    //         Integer x1 = tree.positionInForest[0];
+    //         Integer y1 = tree.positionInForest[1];
+    //         Integer x2 = locationOfX;
+    //         Integer y2 = locationOfY;
+    //         treeLocations.add(Point2D.distance(x1, y1, x2, y2));
+    //     }
+    //     System.out.print(treeLocations);
+    //     Collections.sort(treeLocations);
+    //     return treeLocations.get(1);        
+    // }
+
+    private static void letNatureHappen() {
+        if (forest.size() < 51) {
+            Tree tree = new Tree(randomSpecies(), randomPosition());
+            forest.add(tree); 
+            System.out.printf("The x position is %d, and the y position is %d\n",tree.isLocated()[0] ,tree.isLocated()[1]);               
         }
-        System.out.print(treeLocations);
-        Collections.sort(treeLocations);
-        return treeLocations.get(1);        
+        growAllTrees();
     }
 
     private static void growAllTrees() {
         for(Tree tree : forest) {
-            tree.photosynthesise(tree.species);
+            tree.photosynthesise();
             tree.grow();
             tree.isMature();
         }
     }
 }
 
-
-// find my nearest neighbour
-// am I taller
-// I will keep photosynthesizing
-// I will photosynthesise at my rate by 4 if greater than 1
-
-// {tree1, height, xlocation,ylocation, nearestneighbour:{tree50, height, xlocation,ylocation}}
-// {tree2, height, xlocation,ylocation, nearestneighbour:{tree49, height, xlocation,ylocation}}
