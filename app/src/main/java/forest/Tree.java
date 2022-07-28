@@ -6,7 +6,7 @@ public class Tree {
 
   private int height;
   private int foodReserves;
-  private int[] positionInForest;
+  public int[] positionInForest;
   public String species;
   private HashMap<String,Integer> photosynthesisRate = new HashMap<String, Integer>();
 

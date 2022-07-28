@@ -4,35 +4,44 @@
 package forest;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class App {
    private static String[] species = { "Pine", "Oak", "Cedar", "Juniper", "Fir", "Cypress", "Redwood", "Sequoia", "Yew", "Hemlock"};
    private static ArrayList<Tree> forest = new ArrayList<Tree>();
     public static void main(String[] args) {
-        // System.out.println("I am planting a new tree");         // line 1
-        // Tree myPine = makeAPineGrow(7, 8);                      // line 2
-        // System.out.println("My tree has grown so much!");       // line 3
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 2; i++) {
             for(String specie : species) {
-                forest.add(new Tree(specie, 1, 1));
+                Integer locationOfX = positionOfTree(); 
+                Integer locationOfY = positionOfTree();
+
+                while (checkIfPositionIsOccupied(locationOfX, locationOfY) == true){
+                    locationOfX = positionOfTree();
+                    locationOfY = positionOfTree();
+                    System.out.println("Finding new home for the tree");          
+                }
+
+                System.out.printf("location of x and y is %d %d \n", locationOfX, locationOfY);
+                forest.add(new Tree(specie, locationOfX, locationOfY));
                 growAllTrees();
             }
-
-            // growAllTrees();
-        }
-        // System.out.print(forest);
+        }        
     }
   
-    // private static Tree makeAPineGrow(int posX, int posY) {
-    //     Tree pine = new Tree("Pine", posX, posY);               // line 4
-    //     for(int i = 0; i < 100; i++) {
-    //         for(int j = 0; j < 10; j++) {
-    //             pine.photosynthesise();                         // line 5
-    //         }
-    //         pine.grow();                                        // line 6
-    //     }
-    //     return pine;                                            // line 7
-    // }
+    private static Integer positionOfTree(){
+        Random rand = new Random();
+        int randomNum = rand.nextInt((10 - 1) + 1) + 1;
+        return randomNum;
+    }
+
+    private static Boolean checkIfPositionIsOccupied(Integer locationOfX, Integer locationOfY){
+        for (Tree tree : forest){
+            if (tree.positionInForest[0] == locationOfX && tree.positionInForest[1] == locationOfY){
+                return true;
+            } 
+        }
+        return false;
+    }
 
     private static void growAllTrees() {
         for(Tree tree : forest) {
