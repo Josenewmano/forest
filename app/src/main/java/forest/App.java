@@ -18,25 +18,25 @@ public class App {
                 growAllTrees();
             }
 
-            growAllTrees();
+            // growAllTrees();
         }
         // System.out.print(forest);
     }
   
-    private static Tree makeAPineGrow(int posX, int posY) {
-        Tree pine = new Tree("Pine", posX, posY);               // line 4
-        for(int i = 0; i < 100; i++) {
-            for(int j = 0; j < 10; j++) {
-                pine.photosynthesise();                         // line 5
-            }
-            pine.grow();                                        // line 6
-        }
-        return pine;                                            // line 7
-    }
+    // private static Tree makeAPineGrow(int posX, int posY) {
+    //     Tree pine = new Tree("Pine", posX, posY);               // line 4
+    //     for(int i = 0; i < 100; i++) {
+    //         for(int j = 0; j < 10; j++) {
+    //             pine.photosynthesise();                         // line 5
+    //         }
+    //         pine.grow();                                        // line 6
+    //     }
+    //     return pine;                                            // line 7
+    // }
 
     private static void growAllTrees() {
         for(Tree tree : forest) {
-            tree.photosynthesise();
+            tree.photosynthesise(tree.species);
             tree.grow();
             tree.isMature();
         }
