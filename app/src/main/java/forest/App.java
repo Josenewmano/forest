@@ -4,7 +4,10 @@
 package forest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
+import java.awt.geom.Point2D;
 
 public class App {
    private static String[] species = { "Pine", "Oak", "Cedar", "Juniper", "Fir", "Cypress", "Redwood", "Sequoia", "Yew", "Hemlock"};
@@ -22,10 +25,17 @@ public class App {
                 }
 
                 System.out.printf("location of x and y is %d %d \n", locationOfX, locationOfY);
-                forest.add(new Tree(specie, locationOfX, locationOfY));
+                forest.add(new Tree(specie, locationOfX, locationOfY));                
+                // find my nearest neighbour, update attribute in Tree Class with X,Y location
+                if (forest.size() > 1){
+                    Double nearesteighbour = nearestTreeCalculation(locationOfX, locationOfY);
+                    System.out.printf("This is my closest neighbour %f \n", nearesteighbour);
+                }
+
                 growAllTrees();
+                // my nearest neighbour determines my photosynthesis boolean/rate
             }
-        }        
+        }       
     }
   
     private static Integer positionOfTree(){
@@ -43,6 +53,20 @@ public class App {
         return false;
     }
 
+    private static Double nearestTreeCalculation(Integer locationOfX, Integer locationOfY){
+        ArrayList<Double> treeLocations = new ArrayList<Double>();
+        for (Tree tree: forest){
+            Integer x1 = tree.positionInForest[0];
+            Integer y1 = tree.positionInForest[1];
+            Integer x2 = locationOfX;
+            Integer y2 = locationOfY;
+            treeLocations.add(Point2D.distance(x1, y1, x2, y2));
+        }
+        System.out.print(treeLocations);
+        Collections.sort(treeLocations);
+        return treeLocations.get(1);        
+    }
+
     private static void growAllTrees() {
         for(Tree tree : forest) {
             tree.photosynthesise(tree.species);
@@ -51,3 +75,12 @@ public class App {
         }
     }
 }
+
+
+// find my nearest neighbour
+// am I taller
+// I will keep photosynthesizing
+// I will photosynthesise at my rate by 4 if greater than 1
+
+// {tree1, height, xlocation,ylocation, nearestneighbour:{tree50, height, xlocation,ylocation}}
+// {tree2, height, xlocation,ylocation, nearestneighbour:{tree49, height, xlocation,ylocation}}
