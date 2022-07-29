@@ -4,6 +4,7 @@
 package forest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 import java.util.Timer;
@@ -24,7 +25,7 @@ public class App {
         TimerTask tt = new TimerTask() {  
             @Override  
             public void run() {  
-                System.out.println(count);
+                // System.out.println(count);
                 letNatureHappen();
                 count++;
                 if (count >= 400) {
@@ -65,16 +66,21 @@ public class App {
     }   
     
     private static int[] randomPosition(){
-        return new int[] {rand.nextInt((100 - 1) + 1) + 1, rand.nextInt((100 - 1) + 1) + 1};
+        int[] randomCoordinates = null;
+        while (randomCoordinates == null || positionIsOccupied(randomCoordinates) ) {
+            randomCoordinates = new int[] {rand.nextInt((100 - 1) + 1) + 1, rand.nextInt((100 - 1) + 1) + 1};
+        }
+        return randomCoordinates;
     }
 
-    private static String randomSpecies(){
+    private static String returnRandomSpecies(){
         return species[rand.nextInt(species.length)];
     }
 
-    private static Boolean checkIfPositionIsOccupied(int[] locations){
+    private static Boolean positionIsOccupied(int[] coordinates){
         for (Tree tree : forest){
-            if (tree.isLocated() == locations){
+            if (Arrays.equals(tree.isLocated(), coordinates)){
+                System.out.println("Finding new home for the tree");          
                 return true;
             } 
         }
@@ -97,7 +103,7 @@ public class App {
 
     private static void letNatureHappen() {
         if (forest.size() < 51) {
-            Tree tree = new Tree(randomSpecies(), randomPosition());
+            Tree tree = new Tree(returnRandomSpecies(), randomPosition());
             forest.add(tree); 
             System.out.printf("The x position is %d, and the y position is %d\n",tree.isLocated()[0] ,tree.isLocated()[1]);               
         }
