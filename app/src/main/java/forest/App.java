@@ -21,48 +21,48 @@ public class App {
 
 
     public static void main(String[] args) {
-        Tree tree = new Tree("Redwood", new int[]{1,1});
-        forest.add(tree);
-        for (int i = 0; i < 100; i++) {
-            growAllTrees(); 
-        }
+        // Tree tree = new Tree("Redwood", new int[]{1,1});
+        // forest.add(tree);
+        // for (int i = 0; i < 100; i++) {
+        //     growAllTrees(); 
+        // }
 
-        Tree t = new Tree("Treeesy", new int[]{1,4});
-        forest.add(t);
-        for (int i = 0; i < 10000000; i++) {
-            growAllTrees(); 
-        }
+        // Tree t = new Tree("Treeesy", new int[]{1,4});
+        // forest.add(t);
+        // for (int i = 0; i < 1000; i++) {
+        //     growAllTrees(); 
+        // }
        
-        Tree tree2 = new Tree("Oak", new int[]{1,2});
-        forest.add(tree2);
-        for (int i = 0; i < 100; i++) {
-            growAllTrees(); 
-        }
+        // Tree tree2 = new Tree("Oak", new int[]{1,2});
+        // forest.add(tree2);
+        // for (int i = 0; i < 100; i++) {
+        //     growAllTrees(); 
+        // }
 
-        System.out.println(forest.get(0).isHowTall());
-        System.out.println(forest.get(1).isHowTall());
-        System.out.println(forest.get(2).isHowTall());
+        // System.out.println(forest.get(0).isHowTall());
+        // System.out.println(forest.get(1).isHowTall());
+        // System.out.println(forest.get(2).isHowTall());
 
 
         
 
-        // Timer timer = new Timer();
-        //     TimerTask tt = new TimerTask() {  
-        //         @Override  
-        //         public void run() {  
-        //             // System.out.println(count);
-        //             letNatureHappen();
-        //             count++;
-        //             if (count >= 4000) {
-        //                 timer.cancel();
-        //                 timer.purge();
-        //                 displayGrid();
-        //                 return;
-        //             }                
-        //         };  
-        //     }; 
+        Timer timer = new Timer();
+            TimerTask tt = new TimerTask() {  
+                @Override  
+                public void run() {  
+                    // System.out.println(count);
+                    letNatureHappen();
+                    count++;
+                    if (count >= 4000) {
+                        timer.cancel();
+                        timer.purge();
+                        displayGrid();
+                        return;
+                    }                
+                };  
+            }; 
 
-        // timer.scheduleAtFixedRate(tt,500,3);        
+        timer.scheduleAtFixedRate(tt,500,3);        
 
     }
   
@@ -129,13 +129,17 @@ public class App {
             Boolean isUnshaded = true;
             int index = 0;
             while (isUnshaded && index < forest.size()) {
-                int differential = (tree.isHowTall() - forest.get(index).isHowTall());
+                int heightDifferential = (forest.get(index).isHowTall() - tree.isHowTall());
                 double distanceApart = Point2D.distance(tree.isLocated()[0], tree.isLocated()[1], forest.get(index).isLocated()[0], forest.get(index).isLocated()[1]);
-                if (differential/distanceApart < 4) {
+                // System.out.printf("Species %s, diff. %d, dist %f, unshaded %b\n", tree.species, heightDifferential, distanceApart, isUnshaded);
+
+                if (heightDifferential/distanceApart >= 4) {
                     isUnshaded = false;
+                    // System.out.printf("After maths on %s unshaded %b\n", tree.species, isUnshaded);
                 }
                 index++;
             }
+            // System.out.printf("After while loop on %s unshaded %b\n", tree.species, isUnshaded);
             if (isUnshaded) {
                 photosynthesisers.add(tree);
             }

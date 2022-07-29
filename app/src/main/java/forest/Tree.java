@@ -7,7 +7,7 @@ public class Tree {
   private int height;
   private int foodReserves;
   private int[] positionInForest;
-  private String species;
+  public String species;
   private Integer photosynthesisRate;
   private Boolean hasReportedMaturity;
 
