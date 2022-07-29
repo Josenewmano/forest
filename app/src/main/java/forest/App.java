@@ -14,58 +14,63 @@ import java.awt.geom.Point2D;
 public class App {
    private static String[] species = { "Pine", "Oak", "Cedar", "Juniper", "Fir", "Cypress", "Redwood", "Sequoia", "Yew", "Hemlock"};
    private static ArrayList<Tree> forest = new ArrayList<Tree>();
+   private static char[][] forestGrid = new char[100][100];
+
    private static int count = 0;
    private static Random rand = new Random();
 
 
     public static void main(String[] args) {
+        Tree tree = new Tree("Redwood", new int[]{1,1});
+        forest.add(tree);
+        for (int i = 0; i < 100; i++) {
+            growAllTrees(); 
+        }
+
+        Tree t = new Tree("Treeesy", new int[]{1,4});
+        forest.add(t);
+        for (int i = 0; i < 10000000; i++) {
+            growAllTrees(); 
+        }
+       
+        Tree tree2 = new Tree("Oak", new int[]{1,2});
+        forest.add(tree2);
+        for (int i = 0; i < 100; i++) {
+            growAllTrees(); 
+        }
+
+        System.out.println(forest.get(0).isHowTall());
+        System.out.println(forest.get(1).isHowTall());
+        System.out.println(forest.get(2).isHowTall());
 
 
-        Timer timer = new Timer();
-        TimerTask tt = new TimerTask() {  
-            @Override  
-            public void run() {  
-                // System.out.println(count);
-                letNatureHappen();
-                count++;
-                if (count >= 400) {
-                    timer.cancel();
-                    timer.purge();
-                    return;
-                }                
-            };  
-        }; 
+        
 
-      timer.scheduleAtFixedRate(tt,500,3);  
-        // for(int i = 0; i < 2; i++) {
-        //     for(String specie : species) {
-        //         Integer locationOfX = positionOfTree(); 
-        //         Integer locationOfY = positionOfTree();
+        // Timer timer = new Timer();
+        //     TimerTask tt = new TimerTask() {  
+        //         @Override  
+        //         public void run() {  
+        //             // System.out.println(count);
+        //             letNatureHappen();
+        //             count++;
+        //             if (count >= 4000) {
+        //                 timer.cancel();
+        //                 timer.purge();
+        //                 displayGrid();
+        //                 return;
+        //             }                
+        //         };  
+        //     }; 
 
-        //         while (checkIfPositionIsOccupied(locationOfX, locationOfY) == true){
-        //             locationOfX = positionOfTree();
-        //             locationOfY = positionOfTree();
-        //             System.out.println("Finding new home for the tree");          
-        //         }
+        // timer.scheduleAtFixedRate(tt,500,3);        
 
-        //         System.out.printf("location of x and y is %d %d \n", locationOfX, locationOfY);
-        //         // find my nearest neighbour, update attribute in Tree Class with X,Y location
-        //         if (forest.size() > 1){
-        //             Double nearesteighbour = nearestTreeCalculation(locationOfX, locationOfY);
-        //             System.out.printf("This is my closest neighbour %f \n", nearesteighbour);
-        //         }
-
-        //         growAllTrees();
-        //         // my nearest neighbour determines my photosynthesis boolean/rate
-        //     }
-        // }       
     }
   
     private static void somethingIsHappening() {
         System.out.println("This is something");
     }   
     
-    private static int[] randomPosition(){
+    private static int[] returnRandomUnoccupiedPosition(){
         int[] randomCoordinates = null;
         while (randomCoordinates == null || positionIsOccupied(randomCoordinates) ) {
             randomCoordinates = new int[] {rand.nextInt((100 - 1) + 1) + 1, rand.nextInt((100 - 1) + 1) + 1};
@@ -102,8 +107,8 @@ public class App {
     // }
 
     private static void letNatureHappen() {
-        if (forest.size() < 51) {
-            Tree tree = new Tree(returnRandomSpecies(), randomPosition());
+        if (forest.size() < 50) {
+            Tree tree = new Tree(returnRandomSpecies(), returnRandomUnoccupiedPosition());
             forest.add(tree); 
             System.out.printf("The x position is %d, and the y position is %d\n",tree.isLocated()[0] ,tree.isLocated()[1]);               
         }
@@ -111,10 +116,54 @@ public class App {
     }
 
     private static void growAllTrees() {
+        photosynthesiseUnshadedTrees();
         for(Tree tree : forest) {
-            tree.photosynthesise();
             tree.grow();
             tree.isMature();
+        }
+    }
+
+    private static void photosynthesiseUnshadedTrees(){
+        ArrayList<Tree> photosynthesisers = new ArrayList<Tree>();
+        for (Tree tree : forest) {
+            Boolean isUnshaded = true;
+            int index = 0;
+            while (isUnshaded && index < forest.size()) {
+                int differential = (tree.isHowTall() - forest.get(index).isHowTall());
+                double distanceApart = Point2D.distance(tree.isLocated()[0], tree.isLocated()[1], forest.get(index).isLocated()[0], forest.get(index).isLocated()[1]);
+                if (differential/distanceApart < 4) {
+                    isUnshaded = false;
+                }
+                index++;
+            }
+            if (isUnshaded) {
+                photosynthesisers.add(tree);
+            }
+        }
+        for (Tree tallEnough : photosynthesisers) {
+            tallEnough.photosynthesise();
+        }
+    }
+
+    private static void displayGrid(){
+        for (Tree tree : forest) {
+            System.out.println(tree.isHowTall());
+            int posX = tree.isLocated()[1] - 1;
+            int posY = tree.isLocated()[0] - 1;
+            if (tree.isMature()) {
+                forestGrid[posX][posY] = 'T';
+            } else {
+                forestGrid[posX][posY] = 't';
+            }
+        }
+        for (int i = 0; i < forestGrid.length; i++) {
+            for (int j = 0; j < forestGrid.length; j++) {
+                if (forestGrid[i][j] == '\u0000') {
+                    System.out.printf("%s",'0');
+                }
+                System.out.printf("%s", forestGrid[i][j]);
+            }
+            System.out.printf("\n");
         }
     }
 }

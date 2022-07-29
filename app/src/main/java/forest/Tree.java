@@ -23,7 +23,7 @@ public class Tree {
     if (this.species == "Pine") {
       this.photosynthesisRate = 20;
     } else if (this.species == "Hemlock") {
-      this. photosynthesisRate = 10;
+      this.photosynthesisRate = 10;
     } 
   }
 
@@ -40,7 +40,7 @@ public class Tree {
   }
 
   public Boolean isMature() {
-    if (height == 20) {
+    if (height > 20) {
       reportMaturity();
       return true;
     }
@@ -51,8 +51,12 @@ public class Tree {
     return this.positionInForest;
   }
 
+  public int isHowTall() {
+    return this.height;
+  }
+
   private void reportMaturity(){
-    if (this.hasReportedMaturity == false ) {
+    if (this.hasReportedMaturity == false) {
       this.hasReportedMaturity = true;
       System.out.printf("I am a healthy %s tree\n", species);
     }
