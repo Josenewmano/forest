@@ -5,14 +5,13 @@ package forest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.awt.geom.Point2D;
 
 public class App {
-   private static String[] species = { "Pine", "Oak", "Cedar", "Juniper", "Fir", "Cypress", "Redwood", "Sequoia", "Yew", "Hemlock"};
+   private static String[] species = { "Pine", "Oak", "Cedar", "Juniper", "Fir", "Willow", "Redwood", "Sequoia", "Yew", "Hemlock"};
    private static ArrayList<Tree> forest = new ArrayList<Tree>();
    private static char[][] forestGrid = new char[100][100];
 
@@ -21,39 +20,13 @@ public class App {
 
 
     public static void main(String[] args) {
-        // Tree tree = new Tree("Redwood", new int[]{1,1});
-        // forest.add(tree);
-        // for (int i = 0; i < 100; i++) {
-        //     growAllTrees(); 
-        // }
-
-        // Tree t = new Tree("Treeesy", new int[]{1,4});
-        // forest.add(t);
-        // for (int i = 0; i < 1000; i++) {
-        //     growAllTrees(); 
-        // }
-       
-        // Tree tree2 = new Tree("Oak", new int[]{1,2});
-        // forest.add(tree2);
-        // for (int i = 0; i < 100; i++) {
-        //     growAllTrees(); 
-        // }
-
-        // System.out.println(forest.get(0).isHowTall());
-        // System.out.println(forest.get(1).isHowTall());
-        // System.out.println(forest.get(2).isHowTall());
-
-
-        
-
         Timer timer = new Timer();
             TimerTask tt = new TimerTask() {  
                 @Override  
                 public void run() {  
-                    // System.out.println(count);
                     letNatureHappen();
                     count++;
-                    if (count >= 4000) {
+                    if (count >= 200) {
                         timer.cancel();
                         timer.purge();
                         displayGrid();
@@ -62,13 +35,8 @@ public class App {
                 };  
             }; 
 
-        timer.scheduleAtFixedRate(tt,500,3);        
-
-    }
-  
-    private static void somethingIsHappening() {
-        System.out.println("This is something");
-    }   
+        timer.scheduleAtFixedRate(tt,500,10);        
+    }  
     
     private static int[] returnRandomUnoccupiedPosition(){
         int[] randomCoordinates = null;
@@ -92,27 +60,14 @@ public class App {
         return false;
     }
 
-    // private static Double nearestTreeCalculation(Integer locationOfX, Integer locationOfY){
-    //     ArrayList<Double> treeLocations = new ArrayList<Double>();
-    //     for (Tree tree: forest){
-    //         Integer x1 = tree.positionInForest[0];
-    //         Integer y1 = tree.positionInForest[1];
-    //         Integer x2 = locationOfX;
-    //         Integer y2 = locationOfY;
-    //         treeLocations.add(Point2D.distance(x1, y1, x2, y2));
-    //     }
-    //     System.out.print(treeLocations);
-    //     Collections.sort(treeLocations);
-    //     return treeLocations.get(1);        
-    // }
-
     private static void letNatureHappen() {
+        System.out.println("A beautiful new day dawns, and the sun is shining!");
         if (forest.size() < 50) {
             Tree tree = new Tree(returnRandomSpecies(), returnRandomUnoccupiedPosition());
             forest.add(tree); 
-            System.out.printf("The x position is %d, and the y position is %d\n",tree.isLocated()[0] ,tree.isLocated()[1]);               
         }
         growAllTrees();
+        System.out.println("\n");
     }
 
     private static void growAllTrees() {
@@ -131,15 +86,11 @@ public class App {
             while (isUnshaded && index < forest.size()) {
                 int heightDifferential = (forest.get(index).isHowTall() - tree.isHowTall());
                 double distanceApart = Point2D.distance(tree.isLocated()[0], tree.isLocated()[1], forest.get(index).isLocated()[0], forest.get(index).isLocated()[1]);
-                // System.out.printf("Species %s, diff. %d, dist %f, unshaded %b\n", tree.species, heightDifferential, distanceApart, isUnshaded);
-
                 if (heightDifferential/distanceApart >= 4) {
                     isUnshaded = false;
-                    // System.out.printf("After maths on %s unshaded %b\n", tree.species, isUnshaded);
                 }
                 index++;
             }
-            // System.out.printf("After while loop on %s unshaded %b\n", tree.species, isUnshaded);
             if (isUnshaded) {
                 photosynthesisers.add(tree);
             }
@@ -155,9 +106,9 @@ public class App {
             int posX = tree.isLocated()[1] - 1;
             int posY = tree.isLocated()[0] - 1;
             if (tree.isMature()) {
-                forestGrid[posX][posY] = 'T';
+                forestGrid[posX][posY] = tree.species.charAt(0);
             } else {
-                forestGrid[posX][posY] = 't';
+                forestGrid[posX][posY] = Character.toLowerCase(tree.species.charAt(0));
             }
         }
         for (int i = 0; i < forestGrid.length; i++) {

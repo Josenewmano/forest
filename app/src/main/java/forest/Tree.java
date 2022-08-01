@@ -1,7 +1,5 @@
 package forest;
 
-import java.util.HashMap;
-
 public class Tree {
 
   private int height;
@@ -18,24 +16,23 @@ public class Tree {
     this.positionInForest[1] = pos[1];
     this.photosynthesisRate = 1;
     this.hasReportedMaturity = false;
-    System.out.printf("I am a born %s tree\n", species);
+    System.out.printf("I am a born %s tree\nThe x position is %d, and the y position is %d\n\n", species, isLocated()[0], isLocated()[1]);
 
     if (this.species == "Pine") {
-      this.photosynthesisRate = 20;
+      this.photosynthesisRate = 3;
     } else if (this.species == "Hemlock") {
-      this.photosynthesisRate = 10;
+      this.photosynthesisRate = 2;
     } 
   }
 
   public void grow() {
       if (this.foodReserves > 10) {
-          this.foodReserves = 0; // After growing, the excess of nutrients is lost
+          this.foodReserves = 0;
           this.height++;
       }
   }
 
   public void photosynthesise() {
-      // this.foodReserves++;
       this.foodReserves += this.photosynthesisRate;
   }
 
@@ -58,8 +55,7 @@ public class Tree {
   private void reportMaturity(){
     if (this.hasReportedMaturity == false) {
       this.hasReportedMaturity = true;
-      System.out.printf("I am a healthy %s tree\n", species);
+      System.out.printf("I am a healthy %s tree\nThe x position is %d, and the y position is %d\n", species, isLocated()[0], isLocated()[1]);
     }
   }
-
 }
